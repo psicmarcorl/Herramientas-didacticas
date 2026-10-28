@@ -12,7 +12,7 @@ service cloud.firestore {
     // Solo la persona docente (tu correo) puede administrar.
     function esDocente() {
       return request.auth != null
-        && request.auth.token.email == '<<<ESCRIBE-AQUI-TU-CORREO>>>';
+        && request.auth.token.email == 'marojasl@upncelaya.edu.mx';
     }
 
     // ═════════ NUBE DE IDEAS ═════════
