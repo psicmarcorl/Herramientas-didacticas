@@ -52,7 +52,7 @@ Más adelante puedes cambiar tu contraseña desde cualquier panel docente (botó
 
 ## Paso 5 · Publicar las reglas de seguridad (≈ 2 min)
 
-1. Abre `firestore.rules` y cambia `TU_CORREO@ejemplo.com` por **el mismo correo** del paso 4.
+1. Abre `firestore.rules` y cambia `<<<ESCRIBE-AQUI-TU-CORREO>>>` por **el mismo correo** del paso 4.
 2. En Firebase: **Firestore Database → pestaña Reglas**. Borra lo que haya, pega **todo** el contenido de `firestore.rules` y pulsa **Publicar**.
 
 Qué garantizan estas reglas:

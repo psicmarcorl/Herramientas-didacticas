@@ -2,7 +2,7 @@ rules_version = '2';
 
 // ─────────────────────────────────────────────────────────────
 //  REGLAS DE SEGURIDAD DE FIRESTORE
-//  1) Cambia TU_CORREO@ejemplo.com por el correo con el que creaste
+//  1) Cambia <<<ESCRIBE-AQUI-TU-CORREO>>> por el correo con el que creaste
 //     tu usuario docente en Firebase Authentication.
 //  2) Pega todo este archivo en Firestore → Reglas → Publicar.
 // ─────────────────────────────────────────────────────────────
@@ -12,7 +12,7 @@ service cloud.firestore {
     // Solo la persona docente (tu correo) puede administrar.
     function esDocente() {
       return request.auth != null
-        && request.auth.token.email == 'TU_CORREO@ejemplo.com';
+        && request.auth.token.email == '<<<ESCRIBE-AQUI-TU-CORREO>>>';
     }
 
     // ═════════ NUBE DE IDEAS ═════════
