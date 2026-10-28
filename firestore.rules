@@ -1,0 +1,77 @@
+rules_version = '2';
+
+// ─────────────────────────────────────────────────────────────
+//  REGLAS DE SEGURIDAD DE FIRESTORE
+//  1) Cambia TU_CORREO@ejemplo.com por el correo con el que creaste
+//     tu usuario docente en Firebase Authentication.
+//  2) Pega todo este archivo en Firestore → Reglas → Publicar.
+// ─────────────────────────────────────────────────────────────
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Solo la persona docente (tu correo) puede administrar.
+    function esDocente() {
+      return request.auth != null
+        && request.auth.token.email == 'TU_CORREO@ejemplo.com';
+    }
+
+    // ═════════ NUBE DE IDEAS ═════════
+    // Estado de una nube: abierta si el docente la forzó, o por horario.
+    function nubeAbierta(n) {
+      let t = request.time.toMillis();
+      return n.get('forzado', null) == 'abierta'
+        || (n.get('forzado', null) == null
+            && (n.get('abreEn', null) == null || t >= n.abreEn)
+            && (n.get('cierraEn', null) == null || t < n.cierraEn));
+    }
+
+    match /nubes/{nubeId} {
+      // Los alumnos solo pueden leer UNA nube si conocen su código (no pueden listarlas).
+      allow get: if true;
+      allow list, create, update, delete: if esDocente();
+
+      // Términos públicos (sin nombres): todos pueden leer y agregar mientras esté abierta.
+      match /publicas/{id} {
+        allow read: if true;
+        allow create: if nubeAbierta(get(/databases/$(database)/documents/nubes/$(nubeId)).data)
+          && request.resource.data.keys().hasOnly(['k', 't', 'ts'])
+          && request.resource.data.k is string && request.resource.data.k.size() > 0 && request.resource.data.k.size() <= 90
+          && request.resource.data.t is string && request.resource.data.t.size() > 0 && request.resource.data.t.size() <= 70
+          && request.resource.data.ts == request.time;
+        allow update, delete: if esDocente();
+      }
+
+      // Participaciones con nombre: solo la persona docente puede leerlas.
+      match /participaciones/{id} {
+        allow read, delete: if esDocente();
+        allow update: if false;
+        allow create: if nubeAbierta(get(/databases/$(database)/documents/nubes/$(nubeId)).data)
+          && request.resource.data.keys().hasOnly(['nombre', 't', 'k', 'ts'])
+          && request.resource.data.nombre is string && request.resource.data.nombre.size() <= 40
+          && request.resource.data.k is string && request.resource.data.k.size() <= 90
+          && request.resource.data.t is string && request.resource.data.t.size() <= 70
+          && request.resource.data.ts == request.time;
+      }
+    }
+
+    // ═════════ BOLETO DE SALIDA ═════════
+    match /sesiones/{codigo} {
+      // Los alumnos entran con el código; no pueden listar sesiones.
+      allow get: if true;
+      allow list, create, update, delete: if esDocente();
+
+      // Los aportes solo los lee la persona docente; los alumnos solo pueden agregar.
+      match /aportes/{id} {
+        allow read, delete: if esDocente();
+        allow update: if false;
+        allow create: if get(/databases/$(database)/documents/sesiones/$(codigo)).data.abierta == true
+          && request.resource.data.keys().hasOnly(['nombre', 'tipo', 'texto', 'ts'])
+          && request.resource.data.tipo in ['aprendi', 'clave', 'duda']
+          && request.resource.data.nombre is string && request.resource.data.nombre.size() > 0 && request.resource.data.nombre.size() <= 60
+          && request.resource.data.texto is string && request.resource.data.texto.size() > 0
+          && request.resource.data.texto.size() <= get(/databases/$(database)/documents/sesiones/$(codigo)).data.limite
+          && request.resource.data.ts == request.time;
+      }
+    }
+  }
+}

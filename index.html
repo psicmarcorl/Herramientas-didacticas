@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="es-MX">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Herramientas de aula</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231f3864'/%3E%3Cpath d='M18 44a10 10 0 0 1-1-20 14 14 0 0 1 27 3 8 8 0 0 1-1 17z' fill='%23fff'/%3E%3C/svg%3E">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap">
+  <link rel="stylesheet" href="shared/base.css">
+  <style>
+    body { background: #f6f3ec; }
+    .portada { max-width: 980px; margin: 0 auto; padding: 3.2rem 1.2rem 3rem; }
+    .portada .marca { display: inline-block; font-weight: 900; letter-spacing: .14em; font-size: .8rem; color: #1f3864; background: #e5e9f4; padding: .35em .9em; border-radius: 99px; }
+    .portada h1 { font-size: clamp(2rem, 6vw, 3.2rem); color: #16254a; margin: .5rem 0 .3rem; }
+    .portada .lead { font-size: 1.1rem; color: #4d5568; max-width: 56ch; }
+    .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.2rem; margin-top: 2rem; }
+    .app { background: #fff; border-radius: 22px; padding: 1.4rem; box-shadow: 0 2px 4px rgba(22, 37, 74, .05), 0 14px 34px rgba(22, 37, 74, .09); display: flex; flex-direction: column; gap: .7rem; border-top: 8px solid var(--c); transition: transform .15s; }
+    .app:hover { transform: translateY(-3px); }
+    .app .ico { width: 64px; height: 64px; color: var(--c); }
+    .app h2 { font-size: 1.4rem; margin: 0; color: #16254a; }
+    .app p { margin: 0; color: #4d5568; }
+    .etiquetas { display: flex; gap: .4em; flex-wrap: wrap; }
+    .etiquetas span { font-size: .78rem; font-weight: 800; background: #f1f3f8; color: #3b4660; border-radius: 99px; padding: .2em .7em; }
+    .app .acc { margin-top: auto; display: flex; gap: .5em; flex-wrap: wrap; padding-top: .6rem; }
+    .app .btn-primario { background: var(--c); }
+    .proxima { border: 3px dashed #cdd3e2; background: transparent; box-shadow: none; border-top: 3px dashed #cdd3e2; color: #6b7388; justify-content: center; text-align: center; align-items: center; }
+    .proxima:hover { transform: none; }
+    footer { margin-top: 2.4rem; color: #7a8196; font-size: .85rem; }
+  </style>
+</head>
+<body>
+  <main class="portada">
+    <span class="marca">AULA</span>
+    <h1>Herramientas de aula</h1>
+    <p class="lead">Actividades interactivas para tus clases. Entra al panel de cada herramienta con tu correo y contraseña; tus alumnos solo necesitan el enlace o el código QR.</p>
+    <div class="apps" id="apps"></div>
+    <footer>Los alumnos no usan esta página: reciben el enlace o el QR de cada actividad.</footer>
+  </main>
+  <script type="module">
+    import { APPS } from './shared/apps.js';
+    import { h, bannerDemo } from './shared/ui.js';
+    bannerDemo();
+    const cont = document.getElementById('apps');
+    for (const a of APPS) {
+      cont.append(h('article', { class: 'app', style: { '--c': a.color } },
+        h('div', { class: 'ico', html: a.icono }),
+        h('h2', {}, a.nombre),
+        h('p', {}, a.descripcion),
+        h('div', { class: 'etiquetas' }, (a.etiquetas || []).map((e) => h('span', {}, e))),
+        h('div', { class: 'acc' },
+          h('a', { class: 'btn btn-primario', href: a.panel }, 'Abrir panel docente'),
+          a.alumnos ? h('a', { class: 'btn btn-suave', href: a.alumnos }, 'Entrada de alumnos') : null)));
+    }
+    cont.append(h('article', { class: 'app proxima' },
+      h('h2', {}, '＋ Próximas herramientas'),
+      h('p', {}, 'Aquí aparecerán las nuevas actividades que agregues (ver README).')));
+  </script>
+</body>
+</html>
