@@ -73,5 +73,16 @@ service cloud.firestore {
           && request.resource.data.ts == request.time;
       }
     }
+
+    // ═════════ RULETA DE PARTICIPACIÓN ═════════
+    // Herramienta solo para la persona docente: los alumnos no entran aquí.
+    // Contiene nombres de alumnos, por eso nadie más puede leerla.
+    match /ruletas/{grupo} {
+      allow read, write: if esDocente();
+
+      match /turnos/{id} {
+        allow read, write: if esDocente();
+      }
+    }
   }
 }

@@ -6,6 +6,7 @@ Sitio web estático con tus actividades interactivas, listo para publicarse en *
 |---|---|
 | **Nube de Ideas** | Nube de palabras o frases en vivo, con enlace/QR único por nube, panel docente, programación de apertura y cierre, cinco paletas, proyector y exportes (CSV, JPEG y PDF). |
 | **Boleto de salida** | Los alumnos escanean un QR y "pegan" un aporte (algo que aprendí, cuestión clave o duda) en un tablero de corcho con post-its en vivo. Exporta a Excel. |
+| **Ruleta de participación** | Ruleta animada con los nombres de tu grupo para elegir quién participa. Sin repetir hasta que pasen todos (o al azar), pase de lista, registro de quién participó o no respondió y exporte a Excel. Solo la usas tú: los alumnos no necesitan conectarse. |
 
 Todo corre en el navegador. Los datos se guardan en **Firebase** (gratuito): es la única pieza externa, porque GitHub Pages solo muestra páginas y no puede guardar lo que escriben los alumnos.
 
@@ -58,6 +59,7 @@ Más adelante puedes cambiar tu contraseña desde cualquier panel docente (botó
 Qué garantizan estas reglas:
 
 - Solo tu cuenta puede crear, editar, vaciar o borrar nubes y sesiones, y leer los **nombres** de los alumnos.
+- Los grupos de la **Ruleta** (listas de alumnos e historial de participación) solo los puede leer y modificar tu cuenta.
 - Los alumnos solo pueden **agregar** respuestas, y solo mientras la nube o la sesión esté abierta.
 - La nube pública **no contiene nombres**: los nombres van en una colección aparte que solo tú puedes leer.
 - Los alumnos no pueden listar nubes ni sesiones: solo entran si conocen el código o el enlace (códigos largos y aleatorios).
@@ -65,7 +67,7 @@ Qué garantizan estas reglas:
 ## Paso 6 · Subir el sitio a GitHub Pages (≈ 5 min)
 
 1. En <https://github.com> crea un repositorio nuevo (por ejemplo `aula`), **público**.
-2. Pulsa **Add file → Upload files** y arrastra **el contenido** de esta carpeta (incluyendo `shared`, `nube`, `boleto`, `index.html`; `README.md` y `firestore.rules` también pueden ir). Pulsa **Commit changes**.
+2. Pulsa **Add file → Upload files** y arrastra **el contenido** de esta carpeta (incluyendo `shared`, `nube`, `boleto`, `ruleta`, `index.html`; `README.md` y `firestore.rules` también pueden ir). Pulsa **Commit changes**.
 3. **Settings → Pages → Build and deployment**: *Source* = **Deploy from a branch**, *Branch* = **main** y carpeta **/(root)** → **Save**.
 4. En uno o dos minutos tu sitio estará en `https://TU-USUARIO.github.io/aula/`.
 
@@ -95,6 +97,19 @@ Si al entrar a un panel docente aparece un error de dominio no autorizado, en Fi
 6. **＋ Nueva sesión** crea otro tablero con código y QR nuevos (cierra el anterior). En **Tableros** puedes presentar, exportar o eliminar los anteriores.
 7. El interruptor **Recibiendo aportes** abre o cierra la sesión.
 
+### Ruleta de participación
+1. Menú principal → **Ruleta de participación → Abrir panel docente** → **＋ Nuevo grupo**. Escribe el nombre del grupo y pega la lista de alumnos (un nombre por renglón; puedes copiar la columna de nombres desde Excel).
+2. Elige el **modo**:
+   - **Sin repetir** (recomendado): cada alumno sale una vez por ronda; cuando pasan todos, empieza una ronda nueva. Opcionalmente, quien *no responde* puede volver a la ruleta en esa misma ronda.
+   - **Al azar**: cualquiera puede volver a salir, pero nunca la misma persona dos veces seguidas.
+3. Al iniciar la clase usa **📋 Pase de lista de hoy** y desmarca a quien faltó: no aparecerá en la ruleta ese día. Al día siguiente todos vuelven a contar como presentes.
+4. **🎡 Abrir ruleta para proyectar** abre la ruleta en otra pestaña (arrástrala al proyector). Pulsa **Girar** o la **barra espaciadora**.
+5. Cuando la ruleta se detiene, registra el resultado: **Participó** (tecla 1), **No respondió** (tecla 2) o **Está ausente** (tecla 3, lo marca como ausente hoy). **Esc** cierra sin registrar.
+6. En el panel ves cuántos faltan en la ronda, la **participación por alumno** y el **historial** (puedes quitar un turno registrado por error). **⬇ Exportar a Excel** descarga un `.xlsx` con tres hojas: resumen por alumno, historial completo y asistencia de hoy.
+7. Si corriges la lista, los alumnos que ya estaban conservan su historial. Puedes **duplicar** un grupo (copia la lista, no el historial) o **eliminarlo**.
+
+> **Importante:** si ya habías publicado las reglas antes de que existiera la Ruleta, vuelve a hacer el **paso 5** (pegar todo `firestore.rules` y **Publicar**). Sin eso, el panel de la Ruleta mostrará “No se pudieron leer tus grupos”.
+
 ---
 
 ## Agregar más herramientas al menú
@@ -115,7 +130,7 @@ python3 -m http.server 8000
 
 ## Costos y límites (plan gratuito Spark, sin tarjeta)
 
-- Firestore gratuito: 50 000 lecturas, 20 000 escrituras y 20 000 borrados al día. Una clase de 40 alumnos con 3 palabras cada uno consume del orden de 8 000 lecturas, así que caben unas **5 clases grandes por día**. Un Boleto de salida consume mucho menos.
+- Firestore gratuito: 50 000 lecturas, 20 000 escrituras y 20 000 borrados al día. Una clase de 40 alumnos con 3 palabras cada uno consume del orden de 8 000 lecturas, así que caben unas **5 clases grandes por día**. Un Boleto de salida consume mucho menos, y la Ruleta todavía menos (solo la usas tú).
 - Si algún día te quedas corto, Firebase avisa y puedes pasar al plan de pago por uso (los montos para este tipo de uso suelen ser de centavos).
 
 ## Notas honestas de seguridad
@@ -132,6 +147,7 @@ firestore.rules       Reglas de seguridad para pegar en Firebase
 shared/               Datos (Firebase y modo demostración), acceso docente, QR, Excel, PDF, estilos
 nube/                 Nube de Ideas (alumno, proyector, panel docente)
 boleto/               Boleto de salida (alumno, panel docente, tablero de corcho)
+ruleta/               Ruleta de participación (panel docente y ruleta para proyectar)
 ```
 
 Librerías incluidas: `qrcode-generator` de Kazuhiko Arase (licencia MIT) en `shared/qrcode.mjs`. El SDK de Firebase se carga desde el CDN oficial de Google. Las tipografías Nunito y Caveat se cargan de Google Fonts; si no hay internet se usan tipografías del sistema.
