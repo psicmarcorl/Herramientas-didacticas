@@ -51,7 +51,7 @@
         h('p', {}, a.descripcion),
         h('div', { class: 'etiquetas' }, (a.etiquetas || []).map((e) => h('span', {}, e))),
         h('div', { class: 'acc' },
-          h('a', { class: 'btn btn-primario', href: a.panel }, 'Abrir panel docente'),
+          h('a', { class: 'btn btn-primario', href: a.panel }, a.boton || 'Abrir panel docente'),
           a.alumnos ? h('a', { class: 'btn btn-suave', href: a.alumnos }, 'Entrada de alumnos') : null)));
     }
     cont.append(h('article', { class: 'app proxima' },

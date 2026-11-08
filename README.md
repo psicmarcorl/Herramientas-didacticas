@@ -7,6 +7,7 @@ Sitio web estático con tus actividades interactivas, listo para publicarse en *
 | **Nube de Ideas** | Nube de palabras o frases en vivo, con enlace/QR único por nube, panel docente, programación de apertura y cierre, cinco paletas, proyector y exportes (CSV, JPEG y PDF). |
 | **Boleto de salida** | Los alumnos escanean un QR y "pegan" un aporte (algo que aprendí, cuestión clave o duda) en un tablero de corcho con post-its en vivo. Exporta a Excel. |
 | **Ruleta de participación** | Ruleta animada con los nombres de tu grupo para elegir quién participa. Sin repetir hasta que pasen todos (o al azar), pase de lista, registro de quién participó o no respondió y exporte a Excel. Solo la usas tú: los alumnos no necesitan conectarse. |
+| **Código MEDIR: escape del consultorio** | Escape room de repaso para *Teoría de la Medida*: por parejas, en un solo dispositivo, abren 5 salas (técnicas proyectivas vs. psicométricas, construcción de tests, constructo, redacción de ítems y escala Likert), reúnen las letras de la palabra final y obtienen una constancia imprimible. No usa Firebase ni cuentas: el avance se guarda en el navegador. |
 
 Todo corre en el navegador. Los datos se guardan en **Firebase** (gratuito): es la única pieza externa, porque GitHub Pages solo muestra páginas y no puede guardar lo que escriben los alumnos.
 
@@ -110,12 +111,19 @@ Si al entrar a un panel docente aparece un error de dominio no autorizado, en Fi
 
 > **Importante:** si ya habías publicado las reglas antes de que existiera la Ruleta, vuelve a hacer el **paso 5** (pegar todo `firestore.rules` y **Publicar**). Sin eso, el panel de la Ruleta mostrará “No se pudieron leer tus grupos”.
 
+### Código MEDIR: escape del consultorio
+1. Menú principal → **Código MEDIR → Abrir actividad** (o comparte directamente el enlace `…/escape-consultorio/`). No requiere cuenta ni Firebase.
+2. Cada pareja abre el enlace en un celular o laptop, escribe sus nombres (y grupo, opcional) y pulsa **Entrar al consultorio**. El cronómetro es solo informativo.
+3. Puntaje: 20 puntos por sala; −1 por cada «Comprobar» incorrecto y −3 por cada pista (3 pistas por partida); mínimo 5 por sala.
+4. Al terminar aparece la **Constancia de escape** con nombres, tiempo, puntaje, pistas y el ítem Likert que redactaron. Pueden imprimirla/guardarla en PDF o tomar captura y subirla a la plataforma.
+5. **Para editar textos, respuestas o pistas** modifica solo `escape-consultorio/js/contenido.js` (está comentado). El avance se guarda en el navegador de cada dispositivo; el botón **Reiniciar** lo borra para otra pareja.
+
 ---
 
 ## Agregar más herramientas al menú
 
 1. Crea una carpeta nueva (por ejemplo `mi-app/`) con sus páginas. Reutiliza `shared/db.js` (datos), `shared/shell.js` (acceso docente) y `shared/ui.js`.
-2. Agrega un bloque a `shared/apps.js`. Aparecerá solo en `index.html`.
+2. Agrega un bloque a `shared/apps.js`. Aparecerá solo en `index.html`. (Usa `boton` para cambiar el texto del botón principal, por ejemplo «Abrir actividad».)
 3. Si guarda datos, agrega su bloque `match` en `firestore.rules` y vuelve a publicar las reglas.
 
 ## Probar en tu computadora
