@@ -74,6 +74,36 @@ service cloud.firestore {
       }
     }
 
+    // ═════════ BUZÓN DE PREGUNTAS ═════════
+    // Cada participación ocupa un lugar fijo: «nombre-del-alumno__1» … «__5».
+    // Solo se pueden CREAR lugares vacíos (nunca sobrescribir) y hasta el límite que
+    // fijó la persona docente en la sesión (1 a 5). Así el tope lo aplica el servidor.
+    function buzonAcepta(b, id, d) {
+      return b.abierta == true
+        && id.matches('^[a-z0-9-]{1,50}__[1-5]$')
+        && int(id.split('__')[1]) <= b.limite
+        && d.keys().hasOnly(['nombre', 'texto', 'anonima', 'ts'])
+        && d.keys().hasAll(['nombre', 'texto', 'anonima', 'ts'])
+        && d.nombre is string && d.nombre.size() > 0 && d.nombre.size() <= 60
+        // Si la sesión usa la lista del grupo, el nombre debe estar en ella.
+        && (b.get('modoNombre', 'libre') != 'lista' || d.nombre in b.get('alumnos', []))
+        && d.texto is string && d.texto.size() > 0 && d.texto.size() <= 300
+        && d.anonima is bool
+        && d.ts == request.time;
+    }
+
+    match /buzones/{codigo} {
+      // Los alumnos leen UNA sesión con su código (datos de la clase y lista del grupo); no pueden listarlas.
+      allow get: if true;
+      allow list, create, update, delete: if esDocente();
+
+      // Las preguntas llevan el nombre real: solo la persona docente las lee, marca o borra.
+      match /preguntas/{id} {
+        allow read, update, delete: if esDocente();
+        allow create: if buzonAcepta(get(/databases/$(database)/documents/buzones/$(codigo)).data, id, request.resource.data);
+      }
+    }
+
     // ═════════ RULETA DE PARTICIPACIÓN ═════════
     // Herramienta solo para la persona docente: los alumnos no entran aquí.
     // Contiene nombres de alumnos, por eso nadie más puede leerla.

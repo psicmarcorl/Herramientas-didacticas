@@ -25,6 +25,16 @@ export const APPS = [
     icono: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="3" y="7" width="58" height="50" rx="6" fill="#6B4423"/><rect x="8" y="12" width="48" height="40" rx="3" fill="#C9A26B"/><g transform="rotate(-6 24 28)"><rect x="13" y="17" width="19" height="19" fill="#FFE680"/></g><g transform="rotate(5 42 36)"><rect x="33" y="28" width="17" height="17" fill="#FFB3C7"/></g><circle cx="22" cy="17" r="3" fill="#D64545"/><circle cx="41.5" cy="28" r="3" fill="#D64545"/></svg>'
   },
   {
+    id: 'buzon',
+    nombre: 'Buzón de preguntas',
+    descripcion: 'Tus alumnos envían preguntas en silencio desde su celular, con su nombre para registrar la participación (de 1 a 5 por clase) y la opción de mostrarse anónimos ante el grupo.',
+    etiquetas: ['Participación', 'Anónimo', 'Excel', 'QR'],
+    panel: 'buzon/docente.html',
+    alumnos: 'buzon/',
+    color: '#0e6e8c',
+    icono: '<svg viewBox="0 0 64 64" aria-hidden="true"><rect x="2" y="2" width="60" height="60" rx="16" fill="#0e6e8c"/><path d="M14 16h36a5 5 0 0 1 5 5v19a5 5 0 0 1-5 5H30l-10 8v-8h-6a5 5 0 0 1-5-5V21a5 5 0 0 1 5-5z" fill="#fff"/><path d="M27 26.5a5 5 0 1 1 7 4.6c-1.3.6-2 1.5-2 2.9v.8" fill="none" stroke="#0e6e8c" stroke-width="3.6" stroke-linecap="round"/><circle cx="32" cy="39.5" r="2.3" fill="#0e6e8c"/></svg>'
+  },
+  {
     id: 'ruleta',
     nombre: 'Ruleta de participación',
     descripcion: 'Proyecta una ruleta con los nombres de tu grupo para elegir quién participa, sin repetir hasta que pasen todos, y lleva el registro en Excel.',
