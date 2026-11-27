@@ -6,6 +6,7 @@ Sitio web estático con tus actividades interactivas, listo para publicarse en *
 |---|---|
 | **Nube de Ideas** | Nube de palabras o frases en vivo, con enlace/QR único por nube, panel docente, programación de apertura y cierre, cinco paletas, proyector y exportes (CSV, JPEG y PDF). |
 | **Boleto de salida** | Los alumnos escanean un QR y "pegan" un aporte (algo que aprendí, cuestión clave o duda) en un tablero de corcho con post-its en vivo. Exporta a Excel. |
+| **Buzón de preguntas** | Los alumnos envían preguntas en silencio desde su celular con su nombre (escrito o elegido de tu lista) para registrar participación. Tú fijas de 1 a 5 participaciones por clase con un deslizador; cada alumno decide si su pregunta se proyecta como anónima, pero en tu panel y en el Excel siempre aparece su nombre, con fecha, hora, materia, grupo y tema. |
 | **Ruleta de participación** | Ruleta animada con los nombres de tu grupo para elegir quién participa. Sin repetir hasta que pasen todos (o al azar), pase de lista, registro de quién participó o no respondió y exporte a Excel. Solo la usas tú: los alumnos no necesitan conectarse. |
 | **Código MEDIR: escape del consultorio** | Escape room de repaso para *Teoría de la Medida*: por parejas, en un solo dispositivo, abren 5 salas (técnicas proyectivas vs. psicométricas, construcción de tests, constructo, redacción de ítems y escala Likert), reúnen las letras de la palabra final y obtienen una constancia imprimible. No usa Firebase ni cuentas: el avance se guarda en el navegador. |
 
@@ -60,6 +61,7 @@ Más adelante puedes cambiar tu contraseña desde cualquier panel docente (botó
 Qué garantizan estas reglas:
 
 - Solo tu cuenta puede crear, editar, vaciar o borrar nubes y sesiones, y leer los **nombres** de los alumnos.
+- En el **Buzón de preguntas**, el tope de participaciones (1 a 5) lo aplica el servidor: un alumno no puede rebasarlo aunque recargue la página o cambie de celular. Solo tu cuenta lee los nombres.
 - Los grupos de la **Ruleta** (listas de alumnos e historial de participación) solo los puede leer y modificar tu cuenta.
 - Los alumnos solo pueden **agregar** respuestas, y solo mientras la nube o la sesión esté abierta.
 - La nube pública **no contiene nombres**: los nombres van en una colección aparte que solo tú puedes leer.
@@ -68,7 +70,7 @@ Qué garantizan estas reglas:
 ## Paso 6 · Subir el sitio a GitHub Pages (≈ 5 min)
 
 1. En <https://github.com> crea un repositorio nuevo (por ejemplo `aula`), **público**.
-2. Pulsa **Add file → Upload files** y arrastra **el contenido** de esta carpeta (incluyendo `shared`, `nube`, `boleto`, `ruleta`, `index.html`; `README.md` y `firestore.rules` también pueden ir). Pulsa **Commit changes**.
+2. Pulsa **Add file → Upload files** y arrastra **el contenido** de esta carpeta (incluyendo `shared`, `nube`, `boleto`, `buzon`, `ruleta`, `index.html`; `README.md` y `firestore.rules` también pueden ir). Pulsa **Commit changes**.
 3. **Settings → Pages → Build and deployment**: *Source* = **Deploy from a branch**, *Branch* = **main** y carpeta **/(root)** → **Save**.
 4. En uno o dos minutos tu sitio estará en `https://TU-USUARIO.github.io/aula/`.
 
@@ -97,6 +99,20 @@ Si al entrar a un panel docente aparece un error de dominio no autorizado, en Fi
 5. **Exportar aportes (Excel)** descarga un `.xlsx` con nombre, tipo, aporte y hora, más una hoja de resumen.
 6. **＋ Nueva sesión** crea otro tablero con código y QR nuevos (cierra el anterior). En **Tableros** puedes presentar, exportar o eliminar los anteriores.
 7. El interruptor **Recibiendo aportes** abre o cierra la sesión.
+
+### Buzón de preguntas
+1. Menú principal → **Buzón de preguntas → Abrir panel docente**. Cada **sesión** es una clase y tiene su propio código de 6 caracteres y su QR.
+2. En **Datos de la clase** escribe la materia, el grupo y el tema, y pulsa **Guardar datos de la clase**. Estos datos acompañan cada participación en el Excel.
+3. En **Ajustes**:
+   - Mueve el **deslizador** para fijar cuántas participaciones tiene cada alumno en esa clase (de 1 a 5).
+   - Elige cómo registra su nombre el alumno: **Lo escribe**, o **Lo elige de la lista**. Para la lista, abre **Lista de alumnos del grupo**, pega los nombres (uno por renglón, o la columna copiada de Excel) o pulsa **Traer de la Ruleta**, y luego **Guardar lista**. Los nombres repetidos se eliminan solos.
+4. Proyecta el QR o dicta el código. Los alumnos entran en `…/buzon/`, escriben o eligen su nombre, escriben su pregunta y deciden si marcan **Mostrar mi pregunta como anónima**. Ven cuántas participaciones les quedan; al llegar al tope ya no pueden enviar más.
+5. En **En vivo** ves cada pregunta **siempre con el nombre** (con la etiqueta *Anónima para el grupo* cuando corresponda), la hora y el número de participación. Puedes marcarla como **Respondida**, **Proyectarla** o **Eliminarla** (al eliminarla, el alumno recupera ese lugar). La tabla **Participación** muestra cuántas lleva cada alumno y quién de la lista no ha participado.
+6. **📽 Abrir proyector** abre la vista para el cañón. Elige si muestra **solo la pregunta que tú elijas** o **todas las pendientes**. Las preguntas anónimas aparecen como «Anónimo».
+7. **⬇ Excel de esta sesión** descarga tres hojas: preguntas (nombre, pregunta, número de participación, si fue anónima, fecha, hora, materia, grupo, tema y estado), participación por alumno y datos de la sesión.
+8. **＋ Nueva sesión** abre la siguiente clase (copia materia, grupo, límite y lista; cierra la anterior). En **Historial de sesiones** filtra por materia y grupo y pulsa **⬇ Excel acumulado** para tener el total de participaciones de cada alumno en el semestre, con una columna por clase.
+
+> **Importante:** el Buzón necesita las reglas nuevas. Vuelve a hacer el **paso 5** (pegar todo `firestore.rules` y **Publicar**). Sin eso, el panel mostrará “No se pudieron leer tus sesiones” y los alumnos no podrán enviar preguntas.
 
 ### Ruleta de participación
 1. Menú principal → **Ruleta de participación → Abrir panel docente** → **＋ Nuevo grupo**. Escribe el nombre del grupo y pega la lista de alumnos (un nombre por renglón; puedes copiar la columna de nombres desde Excel).
@@ -138,12 +154,13 @@ python3 -m http.server 8000
 
 ## Costos y límites (plan gratuito Spark, sin tarjeta)
 
-- Firestore gratuito: 50 000 lecturas, 20 000 escrituras y 20 000 borrados al día. Una clase de 40 alumnos con 3 palabras cada uno consume del orden de 8 000 lecturas, así que caben unas **5 clases grandes por día**. Un Boleto de salida consume mucho menos, y la Ruleta todavía menos (solo la usas tú).
+- Firestore gratuito: 50 000 lecturas, 20 000 escrituras y 20 000 borrados al día. Una clase de 40 alumnos con 3 palabras cada uno consume del orden de 8 000 lecturas, así que caben unas **5 clases grandes por día**. Un Boleto de salida o un Buzón de preguntas consumen mucho menos, y la Ruleta todavía menos (solo la usas tú).
 - Si algún día te quedas corto, Firebase avisa y puedes pasar al plan de pago por uso (los montos para este tipo de uso suelen ser de centavos).
 
 ## Notas honestas de seguridad
 
 - Las reglas validan en el servidor el estado de la nube/sesión, el tamaño de los textos y quién puede leer qué. La **cantidad de palabras por alumno** y el **reenvío** se controlan en el navegador del alumno (igual que antes: no se anuncia ni se promueve el reenvío), por lo que una persona técnica con el enlace podría enviar más respuestas mientras la nube esté abierta. Cierra la nube o usa **Vaciar** si eso ocurriera.
+- En el Buzón de preguntas no hay cuentas de alumno: el nombre lo escribe o elige el propio alumno, así que en teoría alguien podría usar el nombre de un compañero. Si eligen de la lista, el servidor solo acepta nombres que estén en ella.
 - Los nombres de los alumnos solo se guardan cuando la nube los pide, y solo tu cuenta puede leerlos.
 - Los códigos de nube son largos y aleatorios; los códigos de sesión del Boleto son de 6 caracteres (miles de millones de combinaciones) y las sesiones no se pueden listar.
 
@@ -155,6 +172,7 @@ firestore.rules       Reglas de seguridad para pegar en Firebase
 shared/               Datos (Firebase y modo demostración), acceso docente, QR, Excel, PDF, estilos
 nube/                 Nube de Ideas (alumno, proyector, panel docente)
 boleto/               Boleto de salida (alumno, panel docente, tablero de corcho)
+buzon/                Buzón de preguntas (alumno, panel docente, proyector)
 ruleta/               Ruleta de participación (panel docente y ruleta para proyectar)
 ```
 
